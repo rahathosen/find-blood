@@ -20,6 +20,18 @@ export async function GET(request: Request) {
     };
     const user = await prisma.user.findUnique({
       where: { id: decoded.userId },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        bloodGroup: true,
+        age: true,
+        latitude: true,
+        longitude: true,
+        createdAt: true,
+        updatedAt: true,
+        // password field is intentionally omitted
+      },
     });
 
     if (!user) {
@@ -29,14 +41,9 @@ export async function GET(request: Request) {
       );
     }
 
-    const { password: _, ...userWithoutPassword } = user; // Explicitly ignore password
-    return NextResponse.json({ success: true, user: userWithoutPassword });
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error("Profile fetch error:", error.message);
-    } else {
-      console.error("Profile fetch error:", error);
-    }
+    return NextResponse.json({ success: true, user });
+  } catch (error) {
+    console.error("Profile fetch error:", error);
     return NextResponse.json(
       { success: false, error: "Failed to fetch profile" },
       { status: 500 }
@@ -65,16 +72,23 @@ export async function PUT(request: Request) {
     const updatedUser = await prisma.user.update({
       where: { id: decoded.userId },
       data: { name, bloodGroup, age, latitude, longitude },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        bloodGroup: true,
+        age: true,
+        latitude: true,
+        longitude: true,
+        createdAt: true,
+        updatedAt: true,
+        // password field is intentionally omitted
+      },
     });
 
-    const { password: _, ...userWithoutPassword } = updatedUser; // Explicitly ignore password
-    return NextResponse.json({ success: true, user: userWithoutPassword });
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.error("Profile update error:", error.message);
-    } else {
-      console.error("Profile update error:", error);
-    }
+    return NextResponse.json({ success: true, user: updatedUser });
+  } catch (error) {
+    console.error("Profile update error:", error);
     return NextResponse.json(
       { success: false, error: "Failed to update profile" },
       { status: 500 }
