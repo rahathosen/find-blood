@@ -10,7 +10,13 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
+  ...compat.config({
+    extends: ["next"], // Extend the base Next.js rules.
+    rules: {
+      "react/no-unescaped-entities": "off", // Allow unescaped characters in React.
+      "@next/next/no-page-custom-font": "off", // Disable the Next.js font custom rule.
+    },
+  }),
 ];
 
 export default eslintConfig;
