@@ -1,8 +1,16 @@
 import { NextResponse } from "next/server";
-import { PrismaClient, User } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { haversineDistance } from "../../utils/haversine";
 
 const prisma = new PrismaClient();
+
+interface Donor {
+  id: string; // Adjust type as necessary
+  name: string;
+  latitude: number;
+  longitude: number;
+  // Add other properties as needed
+}
 
 export async function GET(request: Request) {
   try {
@@ -17,9 +25,9 @@ export async function GET(request: Request) {
       );
     }
 
-    const donors = await prisma.user.findMany();
+    const donors = (await prisma.user.findMany()) as Donor[]; // Cast to Donor array
 
-    const donorsWithDistance = donors.map((donor: User) => ({
+    const donorsWithDistance = donors.map((donor) => ({
       ...donor,
       distance: haversineDistance(
         latitude,
