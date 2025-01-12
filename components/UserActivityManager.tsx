@@ -2,54 +2,57 @@
 
 import { useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
+import debounce from "lodash.debounce";
 
 const INACTIVE_TIMEOUT = 5 * 60 * 1000; // 5 minutes in milliseconds
+const DEBOUNCE_DELAY = 2000; // Debounce API calls every 2 seconds
 
 export default function UserActivityManager() {
   const router = useRouter();
-  const lastActivityTime = useRef<number>(Date.now());
+  const lastActivityTime = useRef(Date.now());
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const isUpdating = useRef<boolean>(false); // Prevent multiple simultaneous updates
 
-  const updateActivity = useCallback(async (status: "active" | "inactive") => {
-    const token = localStorage.getItem("token");
-    if (!token || isUpdating.current) return; // Skip if no token or already updating
+  // Debounced updateActivity function to prevent frequent API calls
+  const updateActivity = useCallback(
+    debounce(async (status: "active" | "inactive") => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
 
-    isUpdating.current = true; // Lock the update process
-    try {
-      const response = await fetch("/api/update-activity", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status }),
-      });
+      try {
+        const response = await fetch("/api/update-activity", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status }),
+        });
 
-      if (!response.ok) {
-        throw new Error("Failed to update activity");
+        if (!response.ok) {
+          throw new Error("Failed to update activity");
+        }
+      } catch (error) {
+        console.error("Error updating activity:", error);
       }
-    } catch (error) {
-      console.error("Error updating activity:", error);
-    } finally {
-      isUpdating.current = false; // Unlock the update process
-    }
-  }, []);
+    }, DEBOUNCE_DELAY),
+    []
+  );
 
   const handleActivity = useCallback(() => {
     lastActivityTime.current = Date.now();
 
-    // Debounce frequent activity updates
+    // Only update activity as 'active' after debounce
+    updateActivity("active");
+
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
 
+    // Set a timeout to mark user as 'inactive' after the timeout period
     timeoutRef.current = setTimeout(() => {
       const currentTime = Date.now();
       if (currentTime - lastActivityTime.current >= INACTIVE_TIMEOUT) {
         updateActivity("inactive");
-      } else {
-        updateActivity("active");
       }
     }, INACTIVE_TIMEOUT);
   }, [updateActivity]);
@@ -81,18 +84,18 @@ export default function UserActivityManager() {
       "touchstart",
       "mousemove",
     ];
+    events.forEach((event) => window.addEventListener(event, handleActivity));
 
-    const attachEvents = () =>
-      events.forEach((event) => window.addEventListener(event, handleActivity));
-    const detachEvents = () =>
+    handleActivity(); // Initial activity update
+
+    return () => {
       events.forEach((event) =>
         window.removeEventListener(event, handleActivity)
       );
-
-    attachEvents(); // Attach events on mount
-    handleActivity(); // Initial activity update
-
-    return detachEvents; // Cleanup on unmount
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
   }, [handleActivity]);
 
   useEffect(() => {
