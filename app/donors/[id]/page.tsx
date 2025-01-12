@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { PageProps } from "next";
 import { PrismaClient } from "@prisma/client";
 import PublicProfile from "@/components/PublicProfile";
 
@@ -6,13 +6,9 @@ const prisma = new PrismaClient();
 
 export default async function DonorProfilePage({
   params,
-}: {
-  params: { id: string };
-}) {
-  const { id } = await params; // Explicitly await params if necessary
-
+}: PageProps<{ id: string }>) {
   const user = await prisma.user.findUnique({
-    where: { id },
+    where: { id: params.id },
     select: {
       id: true,
       name: true,
