@@ -5,7 +5,6 @@ import PublicProfile from "@/components/PublicProfile";
 const prisma = new PrismaClient();
 
 export async function generateStaticParams() {
-  const prisma = new PrismaClient();
   const users = await prisma.user.findMany({
     select: { id: true },
   });
@@ -19,10 +18,11 @@ export async function generateStaticParams() {
 export default async function DonorProfilePage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>; // Change here to match expected type
 }) {
+  const resolvedParams = await params; // Await the params
   const user = await prisma.user.findUnique({
-    where: { id: params.id },
+    where: { id: resolvedParams.id },
     select: {
       id: true,
       name: true,
