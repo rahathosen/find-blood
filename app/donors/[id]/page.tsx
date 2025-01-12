@@ -1,12 +1,18 @@
-import { notFound } from 'next/navigation'
-import { PrismaClient } from '@prisma/client'
-import PublicProfile from '@/components/PublicProfile'
+import { notFound } from "next/navigation";
+import { PrismaClient } from "@prisma/client";
+import PublicProfile from "@/components/PublicProfile";
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
-export default async function DonorProfilePage({ params }: { params: { id: string } }) {
+export default async function DonorProfilePage({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const { id } = await params; // Explicitly await params if necessary
+
   const user = await prisma.user.findUnique({
-    where: { id: params.id },
+    where: { id },
     select: {
       id: true,
       name: true,
@@ -20,10 +26,10 @@ export default async function DonorProfilePage({ params }: { params: { id: strin
       gender: true,
       phoneNumber: true,
     },
-  })
+  });
 
   if (!user) {
-    notFound()
+    notFound();
   }
 
   return (
@@ -31,6 +37,5 @@ export default async function DonorProfilePage({ params }: { params: { id: strin
       <h1 className="text-2xl font-bold mb-4">Donor Profile</h1>
       <PublicProfile user={user} />
     </div>
-  )
+  );
 }
-
