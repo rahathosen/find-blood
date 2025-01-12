@@ -8,15 +8,24 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  password  String
-  name      String
-  bloodGroup String
-  age       Int
-  latitude  Float
-  longitude Float
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id               String   @id @default(cuid())
+  email            String   @unique
+  password         String
+  name             String
+  bloodGroup       String
+  age              Int
+  presentAddress   String?
+  permanentAddress String?
+  profession       String?
+  avatar           String?
+  latitude         Float
+  longitude        Float
+  status           String   @default("inactive")
+  lastActive       DateTime @default(now())
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  gender            String?
+  phoneNumber       String?
+  optionalPhoneNumber String?
 }
 

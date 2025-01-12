@@ -1,23 +1,28 @@
 import Link from 'next/link'
-import RegistrationForm from '@/components/RegistrationForm'
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gray-100 py-6 flex flex-col justify-center sm:py-12">
-      <div className="relative py-3 sm:max-w-xl sm:mx-auto">
-        <div className="absolute inset-0 bg-gradient-to-r from-red-400 to-red-600 shadow-lg transform -skew-y-6 sm:skew-y-0 sm:-rotate-6 sm:rounded-3xl"></div>
-        <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
-          <div className="max-w-md mx-auto">
-            <h1 className="text-2xl font-semibold mb-6 text-center">Blood Donation App</h1>
-            <RegistrationForm />
-            <div className="mt-6 text-center">
-              <Link href="/login" className="text-indigo-600 hover:text-indigo-800">
-                Already have an account? Login
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)]">
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold text-center">Welcome to Blood Donation App</CardTitle>
+          <CardDescription className="text-center">Connect with blood donors and save lives</CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col space-y-4">
+          <Button asChild className="w-full">
+            <Link href="/register">
+              Register as a Donor
+            </Link>
+          </Button>
+          <Button asChild variant="outline" className="w-full">
+            <Link href="/login">
+              Login
+            </Link>
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   )
 }

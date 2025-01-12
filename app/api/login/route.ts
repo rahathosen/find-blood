@@ -7,7 +7,7 @@ const prisma = new PrismaClient()
 
 export async function POST(request: Request) {
   try {
-    const { email, password } = await request.json()
+    const { email, password, latitude, longitude } = await request.json()
 
     const user = await prisma.user.findUnique({ where: { email } })
 
@@ -21,9 +21,20 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: 'Invalid password' }, { status: 401 })
     }
 
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET!, { expiresIn: '1d' })
+    // Update user's location, status, and lastActive
+    const updatedUser = await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        latitude,
+        longitude,
+        status: 'active',
+        lastActive: new Date(),
+      },
+    })
 
-    return NextResponse.json({ success: true, token })
+    const token = jwt.sign({ userId: updatedUser.id }, process.env.JWT_SECRET!, { expiresIn: '1d' })
+
+    return NextResponse.json({ success: true, token, user: { id: updatedUser.id, name: updatedUser.name, email: updatedUser.email } })
   } catch (error) {
     console.error('Login error:', error)
     return NextResponse.json({ success: false, error: 'Login failed' }, { status: 500 })

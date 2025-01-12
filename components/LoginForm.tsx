@@ -22,10 +22,13 @@ export default function LoginForm() {
     setError('')
 
     try {
+      const position = await getCurrentPosition()
+      const { latitude, longitude } = position.coords
+
       const response = await fetch('/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, latitude, longitude }),
       })
 
       const data = await response.json()
@@ -42,6 +45,12 @@ export default function LoginForm() {
     } finally {
       setLoading(false)
     }
+  }
+
+  const getCurrentPosition = (): Promise<GeolocationPosition> => {
+    return new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(resolve, reject)
+    })
   }
 
   return (

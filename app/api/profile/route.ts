@@ -19,8 +19,7 @@ export async function GET(request: Request) {
       return NextResponse.json({ success: false, error: 'User not found' }, { status: 404 })
     }
 
-    const { password, ...userWithoutPassword } = user
-    return NextResponse.json({ success: true, user: userWithoutPassword })
+    return NextResponse.json({ success: true, user: user })
   } catch (error) {
     console.error('Profile fetch error:', error)
     return NextResponse.json({ success: false, error: 'Failed to fetch profile' }, { status: 500 })
@@ -38,11 +37,11 @@ export async function PUT(request: Request) {
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { userId: string }
-    const { name, bloodGroup, age, latitude, longitude } = await request.json()
+    const { name, bloodGroup, age, presentAddress, permanentAddress, profession, avatar } = await request.json()
 
     const updatedUser = await prisma.user.update({
       where: { id: decoded.userId },
-      data: { name, bloodGroup, age, latitude, longitude },
+      data: { name, bloodGroup, age, presentAddress, permanentAddress, profession, avatar },
     })
 
     const { password, ...userWithoutPassword } = updatedUser
