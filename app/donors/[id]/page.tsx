@@ -4,6 +4,17 @@ import PublicProfile from "@/components/PublicProfile";
 
 const prisma = new PrismaClient();
 
+export async function generateStaticParams() {
+  const prisma = new PrismaClient();
+  const users = await prisma.user.findMany({
+    select: { id: true },
+  });
+
+  return users.map((user) => ({
+    id: user.id,
+  }));
+}
+
 // Correctly define the function signature
 export default async function DonorProfilePage({
   params,
