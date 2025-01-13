@@ -7,25 +7,36 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id               String   @id @default(cuid())
-  email            String   @unique
-  password         String
-  name             String
-  bloodGroup       String
-  age              Int
-  presentAddress   String?
-  permanentAddress String?
-  profession       String?
-  avatar           String?
-  latitude         Float
-  longitude        Float
-  status           String   @default("inactive")
-  lastActive       DateTime @default(now())
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-  gender            String?
-  phoneNumber       String?
-  optionalPhoneNumber String?
+model Message {
+  id         String   @id @default(cuid())
+  content    String
+  senderId   String
+  receiverId String
+  createdAt  DateTime @default(now())
+  sender     User     @relation("SentMessages", fields: [senderId], references: [id])
+  receiver   User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
 }
 
+model User {
+  id                  String    @id @default(cuid())
+  email               String    @unique
+  password            String
+  name                String
+  bloodGroup          String
+  age                 Int
+  presentAddress      String?
+  permanentAddress    String?
+  profession          String?
+  avatar              String?
+  latitude            Float
+  longitude           Float
+  status              String    @default("inactive")
+  lastActive          DateTime  @default(now())
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  gender              String?
+  phoneNumber         String?
+  optionalPhoneNumber String?
+  sentMessages        Message[] @relation("SentMessages")
+  receivedMessages    Message[] @relation("ReceivedMessages")
+}

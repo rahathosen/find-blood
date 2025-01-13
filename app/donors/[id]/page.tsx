@@ -1,28 +1,38 @@
 import { notFound } from "next/navigation";
 import { PrismaClient } from "@prisma/client";
 import PublicProfile from "@/components/PublicProfile";
+import { cookies } from "next/headers";
+import jwt from "jsonwebtoken";
 
 const prisma = new PrismaClient();
 
-export async function generateStaticParams() {
-  const users = await prisma.user.findMany({
-    select: { id: true },
-  });
+// Define the type for params as a Promise
+type Params = Promise<{ id: string }>;
 
-  return users.map((user) => ({
-    id: user.id,
-  }));
-}
+export default async function DonorProfilePage({ params }: { params: Params }) {
+  const cookieStore = cookies();
+  const token = (await cookieStore).get("token")?.value;
 
-// Correctly define the function signature
-export default async function DonorProfilePage({
-  params,
-}: {
-  params: Promise<{ id: string }>; // Change here to match expected type
-}) {
-  const resolvedParams = await params; // Await the params
+  if (!token) {
+    return <div>Please log in to view this page.</div>;
+  }
+
+  let currentUserId: string;
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
+      userId: string;
+    };
+    currentUserId = decoded.userId;
+  } catch (error) {
+    console.error("Error verifying token:", error);
+    return <div>Authentication error. Please log in again.</div>;
+  }
+
+  // Await the params to extract id
+  const { id } = await params;
+
   const user = await prisma.user.findUnique({
-    where: { id: resolvedParams.id },
+    where: { id },
     select: {
       id: true,
       name: true,
@@ -45,7 +55,7 @@ export default async function DonorProfilePage({
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-4">Donor Profile</h1>
-      <PublicProfile user={user} />
+      <PublicProfile user={user} currentUserId={currentUserId} />
     </div>
   );
 }
