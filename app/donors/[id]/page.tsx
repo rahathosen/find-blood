@@ -10,8 +10,8 @@ const prisma = new PrismaClient();
 type Params = Promise<{ id: string }>;
 
 export default async function DonorProfilePage({ params }: { params: Params }) {
-  const cookieStore = cookies();
-  const token = (await cookieStore).get("token")?.value;
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
 
   if (!token) {
     return <div>Please log in to view this page.</div>;
@@ -19,7 +19,7 @@ export default async function DonorProfilePage({ params }: { params: Params }) {
 
   let currentUserId: string;
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as unknown as {
       userId: string;
     };
     currentUserId = decoded.userId;

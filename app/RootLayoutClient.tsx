@@ -5,15 +5,19 @@ import UserActivityManager from "@/components/UserActivityManager";
 import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 
+interface RootLayoutClientProps {
+  children: React.ReactNode;
+  token: string; // Add token prop
+}
+
 export default function RootLayoutClient({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+  token,
+}: RootLayoutClientProps) {
   const router = useRouter();
 
   const handleLogout = useCallback(async () => {
-    const token = localStorage.getItem("token");
+    // If there's a token, attempt to log out on the server
     if (token) {
       try {
         await fetch("/api/logout", {
@@ -26,9 +30,13 @@ export default function RootLayoutClient({
         console.error("Error logging out:", error);
       }
     }
-    localStorage.removeItem("token");
+
+    // Remove token from cookies
+    document.cookie = "token=; path=/; max-age=0"; // This removes the cookie by setting its expiration to 0
+
+    // Redirect to the login page
     router.push("/login");
-  }, [router]);
+  }, [router, token]);
 
   return (
     <>
