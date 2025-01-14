@@ -33,7 +33,7 @@ export default function DonorsList({ searchParams, token }: DonorsListProps) {
   const [donors, setDonors] = useState<Donor[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
+  console.log(donors);
   useEffect(() => {
     const fetchDonors = async () => {
       try {
@@ -131,10 +131,10 @@ export default function DonorsList({ searchParams, token }: DonorsListProps) {
                       </span>
                       {" • "}
                       <span className="text-gray-500">
-                        Last active: {formatLastActive(donor.lastActive)}
+                        Last active: {formatDonationDate(donor.lastActive).text}
                       </span>
                     </p>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-gray-800">
                       Last Donation:{" "}
                       {formatDonationDate(donor.lastDonationDate).text}
                     </p>
