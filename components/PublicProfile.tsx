@@ -30,7 +30,6 @@ interface PublicProfileProps {
     lastDonationDate: Date | null;
   };
   currentUserId: string;
-  isOwnProfile: boolean;
 }
 
 interface Message {
