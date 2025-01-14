@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/tooltip";
 import { QuestionMarkCircledIcon } from "@radix-ui/react-icons";
 import { formatDonationDate } from "@/lib/utils";
+import { useSearchParams } from "next/navigation";
 
 interface PublicProfileProps {
   user: {
@@ -29,6 +30,7 @@ interface PublicProfileProps {
     lastDonationDate: Date | null;
   };
   currentUserId: string;
+  isOwnProfile: boolean;
 }
 
 interface Message {
@@ -46,6 +48,13 @@ export default function PublicProfile({
   const [showChat, setShowChat] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
+
+  const searchParams = useSearchParams();
+  useEffect(() => {
+    if (searchParams.get("openChat") === "true") {
+      setShowChat(true);
+    }
+  }, [searchParams]);
 
   const fetchMessages = useCallback(async () => {
     try {
