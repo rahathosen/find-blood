@@ -27,6 +27,7 @@ interface PublicProfileProps {
     lastActive: Date;
     gender: string | null;
     phoneNumber: string | null;
+    optionalPhoneNumber: string | null;
     lastDonationDate: Date | null;
   };
   currentUserId: string;
@@ -151,6 +152,10 @@ export default function PublicProfile({
             <p>{user.phoneNumber || "Not available"}</p>
           </div>
           <div>
+            <p className="font-semibold">Optional Phone Number</p>
+            <p>{user.optionalPhoneNumber || "Not available"}</p>
+          </div>
+          <div>
             <p className="font-semibold">Present Address</p>
             <p>{user.presentAddress || "Not specified"}</p>
           </div>
@@ -164,7 +169,7 @@ export default function PublicProfile({
               {user.status.charAt(0).toUpperCase() + user.status.slice(1)}
             </p>
           </div>
-          <div className="mt-4">
+          <div className="">
             <p className="font-semibold">Last Donation Date</p>
             <div className="flex items-center space-x-2">
               <p

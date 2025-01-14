@@ -63,6 +63,8 @@ export async function PUT(request: Request) {
       permanentAddress,
       profession,
       avatar,
+      phoneNumber,
+      optionalPhoneNumber,
       isPublic,
       lastDonationDate,
     } = await request.json();
@@ -77,6 +79,8 @@ export async function PUT(request: Request) {
         permanentAddress,
         profession,
         avatar,
+        phoneNumber,
+        optionalPhoneNumber,
         isPublic,
         lastDonationDate,
       },

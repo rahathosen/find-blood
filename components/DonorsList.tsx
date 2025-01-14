@@ -33,7 +33,6 @@ export default function DonorsList({ searchParams, token }: DonorsListProps) {
   const [donors, setDonors] = useState<Donor[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  console.log(donors);
   useEffect(() => {
     const fetchDonors = async () => {
       try {

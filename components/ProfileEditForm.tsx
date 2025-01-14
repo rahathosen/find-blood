@@ -13,6 +13,8 @@ interface ProfileFormData {
   permanentAddress: string;
   profession: string;
   avatar: string;
+  phoneNumber: string;
+  optionalPhoneNumber: string;
   isPublic: boolean;
   lastDonationDate: Date | null;
 }
@@ -189,6 +191,38 @@ export default function ProfileEditForm({
           id="profession"
           name="profession"
           value={formData.profession}
+          onChange={handleChange}
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+        />
+      </div>
+      <div>
+        <label
+          htmlFor="phoneNumber"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Phone Number
+        </label>
+        <input
+          type="tel"
+          id="phoneNumber"
+          name="phoneNumber"
+          value={formData.phoneNumber}
+          onChange={handleChange}
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+        />
+      </div>
+      <div>
+        <label
+          htmlFor="optionalPhoneNumber"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Optional Phone Number
+        </label>
+        <input
+          type="tel"
+          id="optionalPhoneNumber"
+          name="optionalPhoneNumber"
+          value={formData.optionalPhoneNumber}
           onChange={handleChange}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
         />

@@ -45,6 +45,7 @@ export default async function DonorProfilePage({ params }: { params: Params }) {
       lastActive: true,
       gender: true,
       phoneNumber: true,
+      optionalPhoneNumber: true,
       lastDonationDate: true,
     },
   });
