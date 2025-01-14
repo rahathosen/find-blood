@@ -39,6 +39,7 @@ export async function GET(request: Request) {
     const donors = await prisma.user.findMany({
       where: {
         id: { not: currentUser.id },
+        isPublic: true, // Only fetch public profiles
         OR: [
           { name: { contains: searchQuery, mode: "insensitive" } },
           { presentAddress: { contains: searchQuery, mode: "insensitive" } },

@@ -13,6 +13,8 @@ interface Donor {
   distance: number;
   status: string;
   lastActive: string;
+  lastDonationDate: string | null;
+  isPublic: boolean;
 }
 
 interface DonorsListProps {
@@ -70,9 +72,9 @@ export default function DonorsList({ searchParams, token }: DonorsListProps) {
 
   const formatDistance = (distance: number) => {
     if (distance < 1) {
-      return `${(distance * 1000).toFixed(0)} m`;
+      return `${(distance * 1000).toFixed(0)} meters away`;
     }
-    return `${distance.toFixed(2)} km`;
+    return `${distance.toFixed(2)} km away`;
   };
 
   const formatLastActive = (lastActive: string) => {
@@ -96,10 +98,10 @@ export default function DonorsList({ searchParams, token }: DonorsListProps) {
       ) : (
         <ul className="space-y-4">
           {donors.map((donor) => (
-            <li key={donor.id} className="border rounded-lg p-4 shadow-sm">
+            <li key={donor.id} className="border rounded-lg p-2 shadow-sm">
               <Link
                 href={`/donors/${donor.id}`}
-                className="block hover:bg-gray-50 transition duration-150 ease-in-out"
+                className="block hover:bg-gray-50 p-4 rounded-md transition duration-150 ease-in-out"
               >
                 <div className="flex justify-between items-start">
                   <div>
