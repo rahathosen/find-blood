@@ -4,6 +4,14 @@ import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { QuestionMarkCircledIcon } from "@radix-ui/react-icons";
+import { formatDonationDate } from "@/lib/utils";
 
 interface PublicProfileProps {
   user: {
@@ -96,18 +104,6 @@ export default function PublicProfile({
     return new Date(date).toLocaleString();
   };
 
-  function formatDonationDate(date: Date | string | null | undefined): string {
-    if (typeof date === "string") {
-      date = new Date(date.replace(" ", "T"));
-    }
-    if (!date || !(date instanceof Date) || isNaN(date.getTime())) {
-      return "Not Donate Yet!";
-    }
-    return date.toLocaleDateString();
-  }
-  console.log(user.lastDonationDate);
-  console.log(user.lastActive);
-  console.log("User data:", user);
   return (
     <Card>
       <CardHeader>
@@ -162,7 +158,32 @@ export default function PublicProfile({
           </div>
           <div className="mt-4">
             <p className="font-semibold">Last Donation Date</p>
-            <p> {formatDonationDate(user.lastDonationDate)}</p>
+            <div className="flex items-center space-x-2">
+              <p
+                className={
+                  formatDonationDate(user.lastDonationDate).isRecent
+                    ? "text-red-500"
+                    : ""
+                }
+              >
+                {formatDonationDate(user.lastDonationDate).text}
+              </p>
+              {formatDonationDate(user.lastDonationDate).isRecent && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <QuestionMarkCircledIcon className="h-4 w-4 text-red-500" />
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom" align="center">
+                      <p className="">
+                        Less than 5 months is not ideal condition for new
+                        donation.
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
+            </div>
           </div>
           <div>
             <p className="font-semibold">Last Active</p>
