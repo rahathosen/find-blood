@@ -11,6 +11,7 @@ interface ProfileFormData {
   permanentAddress: string;
   profession: string;
   avatar: string;
+  lastDonationDate: Date | null;
 }
 
 export default function ProfileEditForm({
@@ -29,6 +30,11 @@ export default function ProfileEditForm({
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const date = e.target.value ? new Date(e.target.value) : null;
+    setFormData({ ...formData, lastDonationDate: date });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -198,6 +204,23 @@ export default function ProfileEditForm({
           value={formData.avatar}
           onChange={handleChange}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+        />
+      </div>
+      <div>
+        <label
+          htmlFor="lastDonationDate"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Last Donation Date
+        </label>
+        <input
+          type="date"
+          value={
+            formData.lastDonationDate
+              ? new Date(formData.lastDonationDate).toISOString().split("T")[0]
+              : ""
+          }
+          onChange={handleDateChange}
         />
       </div>
       {error && <p className="text-red-500 text-sm">{error}</p>}

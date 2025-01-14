@@ -18,6 +18,7 @@ interface PublicProfileProps {
     lastActive: Date;
     gender: string | null;
     phoneNumber: string | null;
+    lastDonationDate: Date | null;
   };
   currentUserId: string;
 }
@@ -95,6 +96,18 @@ export default function PublicProfile({
     return new Date(date).toLocaleString();
   };
 
+  function formatDonationDate(date: Date | string | null | undefined): string {
+    if (typeof date === "string") {
+      date = new Date(date.replace(" ", "T"));
+    }
+    if (!date || !(date instanceof Date) || isNaN(date.getTime())) {
+      return "Not Donate Yet!";
+    }
+    return date.toLocaleDateString();
+  }
+  console.log(user.lastDonationDate);
+  console.log(user.lastActive);
+  console.log("User data:", user);
   return (
     <Card>
       <CardHeader>
@@ -147,11 +160,16 @@ export default function PublicProfile({
               {user.status.charAt(0).toUpperCase() + user.status.slice(1)}
             </p>
           </div>
+          <div className="mt-4">
+            <p className="font-semibold">Last Donation Date</p>
+            <p> {formatDonationDate(user.lastDonationDate)}</p>
+          </div>
+          <div>
+            <p className="font-semibold">Last Active</p>
+            <p>{formatLastActive(user.lastActive)}</p>
+          </div>
         </div>
-        <div className="mt-4">
-          <p className="font-semibold">Last Active</p>
-          <p>{formatLastActive(user.lastActive)}</p>
-        </div>
+
         <div className="mt-6">
           <Button onClick={() => setShowChat(!showChat)}>
             {showChat ? "Hide Chat" : "Show Chat"}

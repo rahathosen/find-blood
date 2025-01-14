@@ -38,7 +38,6 @@ export default function DonorsList({ searchParams, token }: DonorsListProps) {
         if (!token) {
           throw new Error("No token found");
         }
-
         const queryParams = new URLSearchParams({
           query: searchParams.query,
           bloodGroup: searchParams.bloodGroup,

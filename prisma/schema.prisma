@@ -37,6 +37,8 @@ model User {
   gender              String?
   phoneNumber         String?
   optionalPhoneNumber String?
+  isPublic            Boolean   @default(true)
+  lastDonationDate    DateTime?
   sentMessages        Message[] @relation("SentMessages")
   receivedMessages    Message[] @relation("ReceivedMessages")
 }

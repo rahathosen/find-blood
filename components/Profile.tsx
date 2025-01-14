@@ -22,6 +22,7 @@ interface UserProfile {
   gender: string | null;
   phoneNumber: string | null;
   optionalPhoneNumber: string | null;
+  lastDonationDate: Date | null;
 }
 
 export default function Profile({ token }: { token: string }) {
@@ -66,6 +67,16 @@ export default function Profile({ token }: { token: string }) {
     const date = new Date(lastActive);
     return date.toLocaleString();
   };
+
+  function formatDonationDate(date: Date | string | null | undefined): string {
+    if (typeof date === "string") {
+      date = new Date(date.replace(" ", "T"));
+    }
+    if (!date || !(date instanceof Date) || isNaN(date.getTime())) {
+      return "Not Donate Yet!";
+    }
+    return date.toLocaleDateString();
+  }
 
   if (loading) {
     return <div className="text-center">Loading profile...</div>;
@@ -131,6 +142,10 @@ export default function Profile({ token }: { token: string }) {
           <strong>Blood Group:</strong> {profile.bloodGroup}
         </p>
         <p>
+          <strong>Last Donation Date:</strong>{" "}
+          {formatDonationDate(profile.lastDonationDate)}
+        </p>
+        <p>
           <strong>Age:</strong> {profile.age}
         </p>
         <p>
@@ -144,10 +159,7 @@ export default function Profile({ token }: { token: string }) {
         <p>
           <strong>Profession:</strong> {profile.profession || "Not specified"}
         </p>
-        <p>
-          <strong>Location:</strong> Latitude: {profile.latitude.toFixed(6)},
-          Longitude: {profile.longitude.toFixed(6)}
-        </p>
+
         <p>
           <strong>Gender:</strong> {profile.gender || "Not specified"}
         </p>
@@ -158,6 +170,10 @@ export default function Profile({ token }: { token: string }) {
         <p>
           <strong>Optional Phone Number:</strong>{" "}
           {profile.optionalPhoneNumber || "Not specified"}
+        </p>
+        <p>
+          <strong>Location:</strong> Latitude: {profile.latitude.toFixed(6)},
+          Longitude: {profile.longitude.toFixed(6)}
         </p>
       </div>
       <button
