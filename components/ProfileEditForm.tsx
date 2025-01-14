@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 
 interface ProfileFormData {
   name: string;
@@ -11,6 +13,7 @@ interface ProfileFormData {
   permanentAddress: string;
   profession: string;
   avatar: string;
+  isPublic: boolean;
   lastDonationDate: Date | null;
 }
 
@@ -222,6 +225,35 @@ export default function ProfileEditForm({
           }
           onChange={handleDateChange}
         />
+      </div>
+      <div className="flex items-center space-x-2">
+        <Switch
+          id="isPublic"
+          checked={formData.isPublic}
+          onCheckedChange={(checked) =>
+            setFormData({ ...formData, isPublic: checked })
+          }
+          className={`${
+            formData.isPublic ? "bg-green-500" : "bg-yellow-500"
+          } relative inline-flex h-6 w-11 items-center rounded-full`}
+        >
+          <span
+            className={`${
+              formData.isPublic ? "translate-x-6" : "translate-x-1"
+            } inline-block h-4 w-4 transform rounded-full bg-white transition`}
+          />
+        </Switch>
+        <Label htmlFor="isPublic">
+          <span
+            className={`${
+              formData.isPublic ? "text-green-600" : "text-yellow-600"
+            } font-medium`}
+          >
+            {formData.isPublic
+              ? "Your profile is Public"
+              : "Your profile is Private"}
+          </span>
+        </Label>
       </div>
       {error && <p className="text-red-500 text-sm">{error}</p>}
       <button

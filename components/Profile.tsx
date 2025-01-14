@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import ProfileEditForm from "./ProfileEditForm";
+import { Label } from "@/components/ui/label";
 
 interface UserProfile {
   id: string;
@@ -22,6 +23,7 @@ interface UserProfile {
   gender: string | null;
   phoneNumber: string | null;
   optionalPhoneNumber: string | null;
+  isPublic: boolean;
   lastDonationDate: Date | null;
 }
 
@@ -138,6 +140,19 @@ export default function Profile({ token }: { token: string }) {
             </p>
           </div>
         </div>
+        <p>
+          <Label htmlFor="isPublic">
+            <span
+              className={`${
+                profile.isPublic ? "text-green-600" : "text-yellow-600"
+              } font-medium`}
+            >
+              {profile.isPublic
+                ? "Your profile is Public"
+                : "Your profile is Private"}
+            </span>
+          </Label>
+        </p>
         <p>
           <strong>Blood Group:</strong> {profile.bloodGroup}
         </p>
