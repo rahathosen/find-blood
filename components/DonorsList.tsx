@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { formatDonationDate } from "@/lib/utils";
 interface Donor {
   id: string;
   name: string;
@@ -131,6 +133,10 @@ export default function DonorsList({ searchParams, token }: DonorsListProps) {
                       <span className="text-gray-500">
                         Last active: {formatLastActive(donor.lastActive)}
                       </span>
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      Last Donation:{" "}
+                      {formatDonationDate(donor.lastDonationDate).text}
                     </p>
                   </div>
                   <div className="text-right">
