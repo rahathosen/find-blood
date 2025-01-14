@@ -22,6 +22,7 @@ export async function POST(request: Request) {
       email,
       password,
       bloodGroup,
+      phoneNumber,
       age,
       gender,
       latitude,
@@ -33,6 +34,7 @@ export async function POST(request: Request) {
       !email ||
       !password ||
       !bloodGroup ||
+      !phoneNumber ||
       !age ||
       !gender ||
       !latitude ||
@@ -48,8 +50,9 @@ export async function POST(request: Request) {
       data: {
         name,
         email,
-        password, // Include password
+        password,
         bloodGroup,
+        phoneNumber,
         age: parseInt(age, 10),
         gender,
         latitude: parseFloat(latitude),

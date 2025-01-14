@@ -6,8 +6,11 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
+  CardFooter,
 } from "@/components/ui/card";
 import { cookies } from "next/headers";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default async function Login() {
   const cookieStore = cookies();
@@ -32,6 +35,15 @@ export default async function Login() {
         <CardContent>
           <LoginForm />
         </CardContent>
+        <CardFooter className="flex justify-center items-center">
+          <h2 className="font-normal text-sm text-zinc-600">
+            Didn't Member yet!
+            <Link href={"/register"}>
+              <span className="font-bold text-zinc-800"> Register </span>
+            </Link>
+            Now
+          </h2>
+        </CardFooter>
       </Card>
     </div>
   );

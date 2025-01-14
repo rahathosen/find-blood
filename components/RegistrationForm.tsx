@@ -10,6 +10,7 @@ export default function RegistrationForm() {
     email: "",
     password: "",
     bloodGroup: "",
+    phoneNumber: "",
     age: "",
     gender: "",
   });
@@ -144,6 +145,23 @@ export default function RegistrationForm() {
           <option value="O+">O+</option>
           <option value="O-">O-</option>
         </select>
+      </div>
+      <div>
+        <label
+          htmlFor="phoneNumber"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Phone Number
+        </label>
+        <input
+          type="tel"
+          id="phoneNumber"
+          name="phoneNumber"
+          required
+          value={formData.phoneNumber}
+          onChange={handleChange}
+          className="block text-sm font-medium text-gray-700"
+        />
       </div>
       <div>
         <label
