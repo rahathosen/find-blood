@@ -1,19 +1,38 @@
-import LoginForm from '@/components/LoginForm'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { redirect } from "next/navigation";
+import LoginForm from "@/components/LoginForm";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { cookies } from "next/headers";
 
-export default function Login() {
+export default async function Login() {
+  const cookieStore = cookies();
+  const token = (await cookieStore).get("token");
+
+  // Redirect to dashboard if the user is already logged in
+  if (token) {
+    redirect("/dashboard");
+  }
+
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-2xl font-semibold text-center">Login</CardTitle>
-          <CardDescription className="text-center">Enter your credentials to access your account</CardDescription>
+          <CardTitle className="text-2xl font-semibold text-center">
+            Login
+          </CardTitle>
+          <CardDescription className="text-center">
+            Enter your credentials to access your account
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <LoginForm />
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
-
