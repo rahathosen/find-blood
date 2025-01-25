@@ -2,22 +2,26 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { Eye, EyeOff } from "lucide-react";
+
+interface FormData {
+  email: string;
+  password: string;
+}
 
 export default function LoginForm() {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
     setLoading(true);
     setError("");
 
@@ -25,21 +29,20 @@ export default function LoginForm() {
       const position = await getCurrentPosition();
       const { latitude, longitude } = position.coords;
 
-      // Send login request with credentials to backend
       const response = await fetch("/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...formData, latitude, longitude }),
-        credentials: "include", // Ensure credentials are included for cookie handling
+        body: JSON.stringify({ ...data, latitude, longitude }),
+        credentials: "include",
       });
 
-      const data = await response.json();
+      const result = await response.json();
 
-      if (data.success) {
+      if (result.success) {
         router.push("/dashboard");
         router.refresh();
       } else {
-        throw new Error(data.error || "Login failed");
+        throw new Error(result.error || "Login failed");
       }
     } catch (error) {
       console.error("Error:", error);
@@ -56,7 +59,7 @@ export default function LoginForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div>
         <label
           htmlFor="email"
@@ -67,12 +70,19 @@ export default function LoginForm() {
         <input
           type="email"
           id="email"
-          name="email"
-          required
-          value={formData.email}
-          onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          placeholder="Email..."
+          {...register("email", {
+            required: "Email is required",
+            pattern: {
+              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+              message: "Invalid email address",
+            },
+          })}
+          className="mt-1 block w-full border text-[14px] border-gray-300 rounded px-2 py-1 shadow-sm outline-none"
         />
+        {errors.email && (
+          <p className="text-red-500 text-[12px]">{errors.email.message}</p>
+        )}
       </div>
       <div>
         <label
@@ -81,15 +91,31 @@ export default function LoginForm() {
         >
           Password
         </label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          required
-          value={formData.password}
-          onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-        />
+        <div className="relative">
+          <input
+            type={showPassword ? "text" : "password"}
+            id="password"
+            placeholder="Password..."
+            {...register("password", {
+              required: "Password is required",
+              minLength: {
+                value: 4,
+                message: "Password must be at least 4 characters",
+              },
+            })}
+            className="mt-1 block w-full border text-[14px] border-gray-300 rounded px-2 py-1 shadow-sm outline-none"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute inset-y-0 right-2 flex items-center text-gray-500"
+          >
+            {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+          </button>
+        </div>
+        {errors.password && (
+          <p className="text-red-500 text-[12px]">{errors.password.message}</p>
+        )}
       </div>
       {error && <p className="text-red-500 text-sm">{error}</p>}
       <button
