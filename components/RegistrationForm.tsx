@@ -3,26 +3,20 @@
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import bcrypt from "bcryptjs";
-
-type FormData = {
-  name: string;
-  email: string;
-  password: string;
-  bloodGroup: string;
-  phoneNumber: string;
-  age: number;
-  gender: string;
-};
+import { Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
+import { FormDataType } from "@/types/index.type";
 
 export default function RegistrationForm() {
+  const [showPassword, setShowPassword] = useState(false);
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>();
+  } = useForm<FormDataType>();
   const router = useRouter();
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: FormDataType) => {
     try {
       const position = await getCurrentPosition();
       const { latitude, longitude } = position.coords;
@@ -111,19 +105,32 @@ export default function RegistrationForm() {
         >
           Password
         </label>
-        <input
-          type="password"
-          id="password"
-          {...register("password", {
-            required: "Password is required",
-            minLength: {
-              value: 6,
-              message: "Password must be at least 6 characters",
-            },
-          })}
-          placeholder="Password..."
-          className="mt-1 block w-full border text-[14px] border-gray-300 rounded px-2 py-1 shadow-sm outline-none"
-        />
+        <div className="relative mt-1">
+          <input
+            type={showPassword ? "text" : "password"}
+            id="password"
+            {...register("password", {
+              required: "Password is required",
+              minLength: {
+                value: 6,
+                message: "Password must be at least 6 characters",
+              },
+            })}
+            placeholder="Password..."
+            className="block w-full border text-[14px] border-gray-300 rounded px-2 py-1 shadow-sm outline-none"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute inset-y-0 right-2 flex items-center text-gray-500"
+          >
+            {showPassword ? (
+              <EyeOff className="w-4 h-4" />
+            ) : (
+              <Eye className="w-4 h-4" />
+            )}
+          </button>
+        </div>
         {errors.password && (
           <p className="text-red-500 text-[12px]">{errors.password.message}</p>
         )}
