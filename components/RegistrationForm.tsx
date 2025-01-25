@@ -1,63 +1,48 @@
 "use client";
 
-import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import bcrypt from "bcryptjs";
+import { Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
+import { FormDataType } from "@/types/index.type";
 
 export default function RegistrationForm() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    bloodGroup: "",
-    phoneNumber: "",
-    age: "",
-    gender: "",
-  });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormDataType>();
   const router = useRouter();
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
-
+  const onSubmit = async (data: FormDataType) => {
     try {
       const position = await getCurrentPosition();
       const { latitude, longitude } = position.coords;
 
-      const hashedPassword = await bcrypt.hash(formData.password, 10);
+      const hashedPassword = await bcrypt.hash(data.password, 10);
 
       const response = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ...formData,
+          ...data,
           password: hashedPassword,
           latitude,
           longitude,
         }),
       });
 
-      const data = await response.json();
+      const responseData = await response.json();
 
-      if (data.success) {
+      if (responseData.success) {
         router.push("/login");
       } else {
-        throw new Error(data.error || "Registration failed");
+        throw new Error(responseData.error || "Registration failed");
       }
     } catch (error) {
       console.error("Error:", error);
-      setError("Registration failed. Please try again.");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -68,7 +53,7 @@ export default function RegistrationForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <div>
         <label
           htmlFor="name"
@@ -79,13 +64,15 @@ export default function RegistrationForm() {
         <input
           type="text"
           id="name"
-          name="name"
-          required
-          value={formData.name}
-          onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          {...register("name", { required: "Name is required" })}
+          placeholder="Name..."
+          className="mt-1 block w-full border text-[14px] border-gray-300 rounded px-2 py-1 shadow-sm outline-none"
         />
+        {errors.name && (
+          <p className="text-red-500 text-[12px]">{errors.name.message}</p>
+        )}
       </div>
+
       <div>
         <label
           htmlFor="email"
@@ -96,13 +83,21 @@ export default function RegistrationForm() {
         <input
           type="email"
           id="email"
-          name="email"
-          required
-          value={formData.email}
-          onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          {...register("email", {
+            required: "Email is required",
+            pattern: {
+              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+              message: "Invalid email address",
+            },
+          })}
+          placeholder="Email..."
+          className="mt-1 block w-full border text-[14px] border-gray-300 rounded px-2 py-1 shadow-sm outline-none"
         />
+        {errors.email && (
+          <p className="text-red-500 text-[12px]">{errors.email.message}</p>
+        )}
       </div>
+
       <div>
         <label
           htmlFor="password"
@@ -110,16 +105,37 @@ export default function RegistrationForm() {
         >
           Password
         </label>
-        <input
-          type="password"
-          id="password"
-          name="password"
-          required
-          value={formData.password}
-          onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-        />
+        <div className="relative mt-1">
+          <input
+            type={showPassword ? "text" : "password"}
+            id="password"
+            {...register("password", {
+              required: "Password is required",
+              minLength: {
+                value: 4,
+                message: "Password must be at least 4 characters",
+              },
+            })}
+            placeholder="Password..."
+            className="block w-full border text-[14px] border-gray-300 rounded px-2 py-1 shadow-sm outline-none"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute inset-y-0 right-2 flex items-center text-gray-500"
+          >
+            {showPassword ? (
+              <EyeOff className="w-4 h-4" />
+            ) : (
+              <Eye className="w-4 h-4" />
+            )}
+          </button>
+        </div>
+        {errors.password && (
+          <p className="text-red-500 text-[12px]">{errors.password.message}</p>
+        )}
       </div>
+
       <div>
         <label
           htmlFor="bloodGroup"
@@ -129,11 +145,8 @@ export default function RegistrationForm() {
         </label>
         <select
           id="bloodGroup"
-          name="bloodGroup"
-          required
-          value={formData.bloodGroup}
-          onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          {...register("bloodGroup", { required: "Blood group is required" })}
+          className="mt-1 block w-full text-[13px] border   border-gray-300 rounded px-2 py-1 shadow-sm outline-none"
         >
           <option value="">Select Blood Group</option>
           <option value="A+">A+</option>
@@ -145,7 +158,13 @@ export default function RegistrationForm() {
           <option value="O+">O+</option>
           <option value="O-">O-</option>
         </select>
+        {errors.bloodGroup && (
+          <p className="text-red-500 text-[12px]">
+            {errors.bloodGroup.message}
+          </p>
+        )}
       </div>
+
       <div>
         <label
           htmlFor="phoneNumber"
@@ -156,13 +175,23 @@ export default function RegistrationForm() {
         <input
           type="tel"
           id="phoneNumber"
-          name="phoneNumber"
-          required
-          value={formData.phoneNumber}
-          onChange={handleChange}
-          className="block text-sm font-medium text-gray-700"
+          {...register("phoneNumber", {
+            required: "Phone number is required",
+            pattern: {
+              value: /^\d{11}$/,
+              message: "Phone number must be 11 digits",
+            },
+          })}
+          placeholder="Number..."
+          className="mt-1 block w-full border text-[14px] border-gray-300 rounded px-2 py-1 shadow-sm outline-none"
         />
+        {errors.phoneNumber && (
+          <p className="text-red-500 text-[12px]">
+            {errors.phoneNumber.message}
+          </p>
+        )}
       </div>
+
       <div>
         <label
           htmlFor="age"
@@ -173,15 +202,18 @@ export default function RegistrationForm() {
         <input
           type="number"
           id="age"
-          name="age"
-          required
-          min="18"
-          max="65"
-          value={formData.age}
-          onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          {...register("age", {
+            required: "Age is required",
+            min: { value: 18, message: "Age can't be less than 18" },
+          })}
+          placeholder="18"
+          className="mt-1 block w-full border text-[14px] border-gray-300 rounded px-2 py-1 shadow-sm outline-none"
         />
+        {errors.age && (
+          <p className="text-red-500 text-[12px]">{errors.age.message}</p>
+        )}
       </div>
+
       <div>
         <label
           htmlFor="gender"
@@ -191,25 +223,24 @@ export default function RegistrationForm() {
         </label>
         <select
           id="gender"
-          name="gender"
-          value={formData.gender}
-          onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          {...register("gender", { required: "Gender is required" })}
+          className="mt-1 block w-full border text-[13px] border-gray-300 rounded px-2 py-1 shadow-sm outline-none"
         >
           <option value="">Select Gender</option>
           <option value="male">Male</option>
           <option value="female">Female</option>
           <option value="other">Other</option>
         </select>
+        {errors.gender && (
+          <p className="text-red-500 text-[12px]">{errors.gender.message}</p>
+        )}
       </div>
 
-      {error && <p className="text-red-500 text-sm">{error}</p>}
       <button
         type="submit"
-        disabled={loading}
-        className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+        className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
       >
-        {loading ? "Registering..." : "Register"}
+        Register
       </button>
     </form>
   );
