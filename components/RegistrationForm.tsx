@@ -80,10 +80,11 @@ export default function RegistrationForm() {
           type="text"
           id="name"
           name="name"
+          placeholder="Name..."
           required
           value={formData.name}
           onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          className="mt-1 block w-full border text-[14px] border-gray-300 rounded px-2 py-1 shadow-sm outline-none   "
         />
       </div>
       <div>
@@ -100,7 +101,8 @@ export default function RegistrationForm() {
           required
           value={formData.email}
           onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          placeholder="Email..."
+          className="mt-1 block w-full border text-[14px] border-gray-300 rounded px-2 py-1 shadow-sm outline-none   "
         />
       </div>
       <div>
@@ -117,7 +119,8 @@ export default function RegistrationForm() {
           required
           value={formData.password}
           onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          placeholder="Password..."
+          className="mt-1 block w-full border text-[14px] border-gray-300 rounded px-2 py-1 shadow-sm outline-none   "
         />
       </div>
       <div>
@@ -133,7 +136,7 @@ export default function RegistrationForm() {
           required
           value={formData.bloodGroup}
           onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          className="mt-1 block w-full border text-[14px] border-gray-300 rounded px-2 py-1 shadow-sm outline-none   "
         >
           <option value="">Select Blood Group</option>
           <option value="A+">A+</option>
@@ -160,7 +163,8 @@ export default function RegistrationForm() {
           required
           value={formData.phoneNumber}
           onChange={handleChange}
-          className="block text-sm font-medium text-gray-700"
+          placeholder="Number..."
+          className="mt-1 block w-full border text-[14px] border-gray-300 rounded px-2 py-1 shadow-sm outline-none   "
         />
       </div>
       <div>
@@ -179,7 +183,8 @@ export default function RegistrationForm() {
           max="65"
           value={formData.age}
           onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          placeholder="18"
+          className="mt-1 block w-full border text-[14px] border-gray-300 rounded px-2 py-1 shadow-sm outline-none   "
         />
       </div>
       <div>
@@ -194,7 +199,7 @@ export default function RegistrationForm() {
           name="gender"
           value={formData.gender}
           onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          className="mt-1 block w-full border text-[14px] border-gray-300 rounded px-2 py-1 shadow-sm outline-none   "
         >
           <option value="">Select Gender</option>
           <option value="male">Male</option>
