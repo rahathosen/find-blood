@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -14,7 +13,7 @@ export default async function Home() {
   const token = (await cookieStore).get("token");
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[calc(100vh-4rem)]">
+    <div className="flex flex-col items-center sm:px-0 px-4 justify-center min-h-[calc(100vh-4rem)]">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-center">
@@ -28,12 +27,21 @@ export default async function Home() {
         </CardHeader>
         {!token ? (
           <CardContent className="flex flex-col space-y-4">
-            <Button asChild className="w-full">
-              <Link href="/register">Register as a Donor</Link>
-            </Button>
-            <Button asChild variant="outline" className="w-full">
-              <Link href="/login">Login</Link>
-            </Button>
+            <Link
+              href="/register"
+              type="submit"
+              className="w-full py-2 px-4 text-center border border-transparent rounded-md duration-300 shadow-sm text-sm font-medium hover:text-white   hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+            >
+              Register as a Donor
+            </Link>
+
+            <Link
+              href="/login"
+              type="submit"
+              className="w-full py-2 px-4 text-center border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+            >
+              Login
+            </Link>
           </CardContent>
         ) : (
           <CardContent className="text-center text-gray-700">
