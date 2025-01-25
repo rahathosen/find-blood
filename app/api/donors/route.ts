@@ -67,7 +67,7 @@ export async function GET(request: Request) {
       },
     });
 
-    const donorsWithDistance = donors.map((donor) => ({
+    const donorsWithDistance = donors.map((donor : any) => ({
       ...donor,
       distance: haversineDistance(
         currentUser.latitude,
@@ -78,7 +78,7 @@ export async function GET(request: Request) {
     }));
 
     const sortedDonors = donorsWithDistance.sort(
-      (a, b) => a.distance - b.distance
+      (a : any, b: any) => a.distance - b.distance
     );
 
     return NextResponse.json({ success: true, donors: sortedDonors });
