@@ -4,6 +4,8 @@ import Link from "next/link";
 import UserActivityManager from "@/components/UserActivityManager";
 import { useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Menu, X } from "lucide-react";
 
 interface RootLayoutClientProps {
   children: React.ReactNode;
@@ -15,6 +17,11 @@ export default function RootLayoutClient({
   token,
 }: RootLayoutClientProps) {
   const router = useRouter();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   const handleLogout = useCallback(async () => {
     // If there's a token, attempt to log out on the server
@@ -44,14 +51,14 @@ export default function RootLayoutClient({
       <nav className="bg-white shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
-            <div className="flex">
+            <div className="flex   justify-between">
               <div className="flex-shrink-0 flex items-center">
                 <Link href="/" className="text-md font-bold text-rose-600">
                   Blood
                 </Link>
               </div>
             </div>
-            <div className="flex items-center">
+            <div className=" hidden sm:flex items-center">
               {token ? (
                 <div className="sm:ml-6 sm:flex sm:space-x-8 text-sm font-medium">
                   <Link
@@ -87,9 +94,57 @@ export default function RootLayoutClient({
                 </Link>
               )}
             </div>
+
+            <div className="flex items-center sm:hidden">
+              <button onClick={toggleSidebar} className="text-gray-900">
+                {isSidebarOpen ? "" : <Menu size={24} />}
+              </button>
+            </div>
           </div>
         </div>
       </nav>
+      {/* Sidebar */}
+      <div
+        className={`fixed inset-0 bg-black bg-opacity-50 z-40 transform ${
+          isSidebarOpen ? "translate-x-0" : "translate-x-full"
+        } transition-transform duration-300 sm:hidden`}
+      >
+        <div className="bg-white w-64 h-full shadow-lg absolute right-0">
+          <div className="flex justify-between items-center p-4">
+            <button onClick={toggleSidebar} className="text-gray-900">
+              <X size={24} />
+            </button>
+          </div>
+          <div className="space-y-4 px-4">
+            <Link
+              href="/dashboard"
+              onClick={() => setIsSidebarOpen(false)}
+              className="block text-gray-900   rounded-md"
+            >
+              Dashboard
+            </Link>
+            <Link
+              href="/profile"
+              onClick={() => setIsSidebarOpen(false)}
+              className="block text-gray-900   rounded-md"
+            >
+              Profile
+            </Link>
+            <Link
+              href="/inbox"
+              onClick={() => setIsSidebarOpen(false)}
+              className="block text-gray-900   rounded-md"
+            >
+              Inbox
+            </Link>
+            <Link href="/login" onClick={() => setIsSidebarOpen(false)}>
+              <button className="block w-full text-left text-gray-900 pt-3   rounded-md">
+                Login
+              </button>
+            </Link>
+          </div>
+        </div>
+      </div>
       <UserActivityManager />
       <main>{children}</main>
     </>
