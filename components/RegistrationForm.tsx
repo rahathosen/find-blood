@@ -146,7 +146,7 @@ export default function RegistrationForm() {
         <select
           id="bloodGroup"
           {...register("bloodGroup", { required: "Blood group is required" })}
-          className="mt-1 block w-full border text-[14px] border-gray-300 rounded px-2 py-1 shadow-sm outline-none"
+          className="mt-1 block w-full text-[13px] border   border-gray-300 rounded px-2 py-1 shadow-sm outline-none"
         >
           <option value="">Select Blood Group</option>
           <option value="A+">A+</option>
@@ -224,7 +224,7 @@ export default function RegistrationForm() {
         <select
           id="gender"
           {...register("gender", { required: "Gender is required" })}
-          className="mt-1 block w-full border text-[14px] border-gray-300 rounded px-2 py-1 shadow-sm outline-none"
+          className="mt-1 block w-full border text-[13px] border-gray-300 rounded px-2 py-1 shadow-sm outline-none"
         >
           <option value="">Select Gender</option>
           <option value="male">Male</option>
