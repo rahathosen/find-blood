@@ -84,7 +84,7 @@ export default function ProfileEditForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4 md:w-[350px]">
       <div>
         <label
           htmlFor="name"
