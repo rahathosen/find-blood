@@ -99,7 +99,7 @@ export default function ProfileEditForm({
           required
           value={formData.name}
           onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          className="mt-1 block w-full border text-[14px] border-gray-300 rounded px-2 py-1 shadow-sm outline-none"
         />
       </div>
       <div>
@@ -115,7 +115,7 @@ export default function ProfileEditForm({
           required
           value={formData.bloodGroup}
           onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          className="mt-1 block w-full text-[13px] border   border-gray-300 rounded px-2 py-1 shadow-sm outline-none"
         >
           <option value="">Select Blood Group</option>
           <option value="A+">A+</option>
@@ -144,7 +144,7 @@ export default function ProfileEditForm({
           max="65"
           value={formData.age}
           onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          className="mt-1 block w-full border text-[14px] border-gray-300 rounded px-2 py-1 shadow-sm outline-none"
         />
       </div>
       <div>
@@ -160,7 +160,7 @@ export default function ProfileEditForm({
           name="presentAddress"
           value={formData.presentAddress}
           onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          className="mt-1 block w-full border text-[14px] border-gray-300 rounded px-2 py-1 shadow-sm outline-none"
         />
       </div>
       <div>
@@ -176,7 +176,7 @@ export default function ProfileEditForm({
           name="permanentAddress"
           value={formData.permanentAddress}
           onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          className="mt-1 block w-full border text-[14px] border-gray-300 rounded px-2 py-1 shadow-sm outline-none"
         />
       </div>
       <div>
@@ -192,7 +192,7 @@ export default function ProfileEditForm({
           name="profession"
           value={formData.profession}
           onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          className="mt-1 block w-full border text-[14px] border-gray-300 rounded px-2 py-1 shadow-sm outline-none"
         />
       </div>
       <div>
@@ -208,7 +208,7 @@ export default function ProfileEditForm({
           name="phoneNumber"
           value={formData.phoneNumber}
           onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          className="mt-1 block w-full border text-[14px] border-gray-300 rounded px-2 py-1 shadow-sm outline-none"
         />
       </div>
       <div>
@@ -224,7 +224,7 @@ export default function ProfileEditForm({
           name="optionalPhoneNumber"
           value={formData.optionalPhoneNumber}
           onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          className="mt-1 block w-full text-[13px] border   border-gray-300 rounded px-2 py-1 shadow-sm outline-none"
         />
       </div>
       <div>
@@ -240,7 +240,7 @@ export default function ProfileEditForm({
           name="avatar"
           value={formData.avatar}
           onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          className="mt-1 block w-full text-[13px] border   border-gray-300 rounded px-2 py-1 shadow-sm outline-none"
         />
       </div>
       <div>
@@ -281,7 +281,7 @@ export default function ProfileEditForm({
           <span
             className={`${
               formData.isPublic ? "text-green-600" : "text-yellow-600"
-            } font-medium`}
+            } font-medium cursor-pointer`}
           >
             {formData.isPublic
               ? "Your profile is Public"
