@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatDonationDate } from "@/lib/utils";
+import { PaginationDemo } from "./Pagination";
 interface Donor {
   id: string;
   name: string;
@@ -149,6 +150,9 @@ export default function DonorsList({ searchParams, token }: DonorsListProps) {
           ))}
         </ul>
       )}
+
+      {/* Pagination */}
+      <PaginationDemo />
     </div>
   );
 }

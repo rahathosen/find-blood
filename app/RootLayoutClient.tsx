@@ -53,7 +53,10 @@ export default function RootLayoutClient({
           <div className="flex justify-between h-16">
             <div className="flex   justify-between">
               <div className="flex-shrink-0 flex items-center">
-                <Link href="/" className="text-md font-bold text-rose-600">
+                <Link
+                  href="/"
+                  className="md:text-2xl text-md font-bold text-rose-600"
+                >
                   Blood
                 </Link>
               </div>
@@ -63,19 +66,19 @@ export default function RootLayoutClient({
                 <div className="sm:ml-6 sm:flex sm:space-x-8 text-sm font-medium">
                   <Link
                     href="/dashboard"
-                    className="text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-gray-300"
+                    className="text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-red-500"
                   >
                     Dashboard
                   </Link>
                   <Link
                     href="/profile"
-                    className="text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-gray-300"
+                    className="text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-red-500"
                   >
                     Profile
                   </Link>
                   <Link
                     href="/inbox"
-                    className="text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-gray-300"
+                    className="text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-red-500"
                   >
                     Inbox
                   </Link>
