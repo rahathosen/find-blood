@@ -81,7 +81,14 @@ export default function Profile({ token }: { token: string }) {
   }
 
   if (loading) {
-    return <div className="text-center">Loading profile...</div>;
+    return (
+      <div className="text-center">
+        <div className="inline-block w-6 h-6 md:w-8 w md:h-8 border-2 border-red-500 border-t-transparent rounded-full animate-spin"></div>
+        <p className="mt-2 text-[14px] md:text-[16px] text-red-500">
+          Loading profile...
+        </p>
+      </div>
+    );
   }
 
   if (error) {
@@ -115,21 +122,25 @@ export default function Profile({ token }: { token: string }) {
   }
 
   return (
-    <div className="space-y-4">
-      <h2 className="text-2xl font-bold">Your Profile</h2>
-      <div className="border rounded-lg p-4 shadow-sm">
-        <div className="flex items-center space-x-4 mb-4">
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold text-gray-800">Your Profile</h2>
+
+      <div className="border rounded p-6 shadow-md bg-white">
+        {/* Profile Header */}
+        <div className="flex flex-wrap items-center gap-6 md:gap-8 mb-6">
           <Image
-            src={profile.avatar || "/placeholder.svg"}
+            src={profile.avatar || "/placeholder.png"}
             alt={profile.name}
-            width={100}
-            height={100}
+            width={150}
+            height={150}
             className="rounded-full"
           />
           <div>
-            <h3 className="text-xl font-semibold">{profile.name}</h3>
-            <p className="text-gray-600">{profile.email}</p>
-            <p className="text-sm">
+            <h3 className="text-2xl font-semibold text-gray-800">
+              {profile.name}
+            </h3>
+            <p className="text-gray-500">{profile.email}</p>
+            <p className="text-sm mt-1">
               <span
                 className={`font-bold ${
                   profile.status === "active"
@@ -140,14 +151,56 @@ export default function Profile({ token }: { token: string }) {
                 {profile.status.charAt(0).toUpperCase() +
                   profile.status.slice(1)}
               </span>
-              {" • "}
               <span className="text-gray-500">
-                Last active: {formatLastActive(profile.lastActive)}
+                {" "}
+                • Last active: {formatLastActive(profile.lastActive)}
               </span>
             </p>
           </div>
         </div>
-        <p>
+
+        {/* Profile Details */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-6 text-gray-700">
+          <p>
+            <strong>Blood Group:</strong> {profile.bloodGroup}
+          </p>
+          <p>
+            <strong>Last Donation Date:</strong>{" "}
+            {formatDonationDate(profile.lastDonationDate)}
+          </p>
+          <p>
+            <strong>Age:</strong> {profile.age}
+          </p>
+          <p>
+            <strong>Present Address:</strong>{" "}
+            {profile.presentAddress || "Not specified"}
+          </p>
+          <p>
+            <strong>Permanent Address:</strong>{" "}
+            {profile.permanentAddress || "Not specified"}
+          </p>
+          <p>
+            <strong>Profession:</strong> {profile.profession || "Not specified"}
+          </p>
+          <p>
+            <strong>Gender:</strong> {profile.gender || "Not specified"}
+          </p>
+          <p>
+            <strong>Phone Number:</strong>{" "}
+            {profile.phoneNumber || "Not specified"}
+          </p>
+          <p>
+            <strong>Optional Phone Number:</strong>{" "}
+            {profile.optionalPhoneNumber || "Not specified"}
+          </p>
+          <p>
+            <strong>Location:</strong> Latitude: {profile.latitude.toFixed(6)},
+            Longitude: {profile.longitude.toFixed(6)}
+          </p>
+        </div>
+
+        {/* Profile Visibility */}
+        <div className="mt-6 text-sm">
           <Label htmlFor="isPublic">
             <span
               className={`${
@@ -159,48 +212,13 @@ export default function Profile({ token }: { token: string }) {
                 : "Your profile is Private"}
             </span>
           </Label>
-        </p>
-        <p>
-          <strong>Blood Group:</strong> {profile.bloodGroup}
-        </p>
-        <p>
-          <strong>Last Donation Date:</strong>{" "}
-          {formatDonationDate(profile.lastDonationDate)}
-        </p>
-        <p>
-          <strong>Age:</strong> {profile.age}
-        </p>
-        <p>
-          <strong>Present Address:</strong>{" "}
-          {profile.presentAddress || "Not specified"}
-        </p>
-        <p>
-          <strong>Permanent Address:</strong>{" "}
-          {profile.permanentAddress || "Not specified"}
-        </p>
-        <p>
-          <strong>Profession:</strong> {profile.profession || "Not specified"}
-        </p>
-
-        <p>
-          <strong>Gender:</strong> {profile.gender || "Not specified"}
-        </p>
-        <p>
-          <strong>Phone Number:</strong>{" "}
-          {profile.phoneNumber || "Not specified"}
-        </p>
-        <p>
-          <strong>Optional Phone Number:</strong>{" "}
-          {profile.optionalPhoneNumber || "Not specified"}
-        </p>
-        <p>
-          <strong>Location:</strong> Latitude: {profile.latitude.toFixed(6)},
-          Longitude: {profile.longitude.toFixed(6)}
-        </p>
+        </div>
       </div>
+
+      {/* Edit Button */}
       <button
         onClick={() => setIsEditing(true)}
-        className="mt-4 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        className="py-2 px-6 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
       >
         Edit Profile
       </button>
