@@ -1,32 +1,34 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
+import { useState } from "react";
 
 interface SearchBarProps {
   onSearch: (searchParams: {
-    query: string
-    bloodGroup: string
-    minAge: string
-    maxAge: string
-  }) => void
+    query: string;
+    bloodGroup: string;
+    minAge: string;
+    maxAge: string;
+  }) => void;
 }
 
 export default function SearchBar({ onSearch }: SearchBarProps) {
   const [searchParams, setSearchParams] = useState({
-    query: '',
-    bloodGroup: '',
-    minAge: '',
-    maxAge: '',
-  })
+    query: "",
+    bloodGroup: "",
+    minAge: "",
+    maxAge: "",
+  });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setSearchParams({ ...searchParams, [e.target.name]: e.target.value })
-  }
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    setSearchParams({ ...searchParams, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    onSearch(searchParams)
-  }
+    e.preventDefault();
+    onSearch(searchParams);
+  };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 mb-6">
@@ -37,13 +39,13 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
           placeholder="Search by name, address, or profession"
           value={searchParams.query}
           onChange={handleChange}
-          className="flex-grow px-3 py-2 border rounded-md"
+          className="flex-grow px-3 text-[13px] outline-none md:text-[14px] py-2 border rounded-md"
         />
         <select
           name="bloodGroup"
           value={searchParams.bloodGroup}
           onChange={handleChange}
-          className="px-3 py-2 border rounded-md"
+          className="px-3 py-2 border text-[13px] md:text-[14px] rounded-md outline-none"
         >
           <option value="">All Blood Groups</option>
           <option value="A+">A+</option>
@@ -61,7 +63,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
           placeholder="Min Age"
           value={searchParams.minAge}
           onChange={handleChange}
-          className="w-24 px-3 py-2 border rounded-md"
+          className="w-24 px-3 py-2 border text-[12px] outline-none rounded-md"
         />
         <input
           type="number"
@@ -69,16 +71,15 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
           placeholder="Max Age"
           value={searchParams.maxAge}
           onChange={handleChange}
-          className="w-24 px-3 py-2 border rounded-md"
+          className="w-24 px-3 py-2 text-[12px] border rounded-md outline-none"
         />
         <button
           type="submit"
-          className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+          className="px-4 py-2 text-[13px] md:text-[14px] bg-red-500 text-white rounded-md hover:bg-red-600"
         >
           Search
         </button>
       </div>
     </form>
-  )
+  );
 }
-

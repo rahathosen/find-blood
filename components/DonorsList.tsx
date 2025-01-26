@@ -85,7 +85,14 @@ export default function DonorsList({ searchParams, token }: DonorsListProps) {
   };
 
   if (loading) {
-    return <div className="text-center">Loading donors...</div>;
+    return (
+      <div className="text-center">
+        <div className="inline-block w-6 h-6 md:w-8 w md:h-8 border-2 border-red-500 border-t-transparent rounded-full animate-spin"></div>
+        <p className="mt-2 text-[14px] md:text-[16px] text-red-500">
+          Loading donors...
+        </p>
+      </div>
+    );
   }
 
   if (error) {
