@@ -2,10 +2,16 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { formatDonationDate } from "@/lib/utils";
-import { PaginationDemo } from "./Pagination";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+
 interface Donor {
   id: string;
   name: string;
@@ -27,18 +33,20 @@ interface DonorsListProps {
     minAge: string;
     maxAge: string;
   };
-  token: string; // Include token in props
+  token: string;
 }
 
 export default function DonorsList({ searchParams, token }: DonorsListProps) {
   const [donors, setDonors] = useState<Donor[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(5);
+
   useEffect(() => {
     const fetchDonors = async () => {
       try {
         setLoading(true);
-        // const token = localStorage.getItem("token");
         if (!token) {
           throw new Error("No token found");
         }
@@ -72,16 +80,18 @@ export default function DonorsList({ searchParams, token }: DonorsListProps) {
     fetchDonors();
   }, [searchParams]);
 
+  // Pagination logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentDonors = donors.slice(indexOfFirstItem, indexOfLastItem);
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
   const formatDistance = (distance: number) => {
     if (distance < 1) {
       return `${(distance * 1000).toFixed(0)} meters away`;
     }
     return `${distance.toFixed(2)} km away`;
-  };
-
-  const formatLastActive = (lastActive: string) => {
-    const date = new Date(lastActive);
-    return date.toLocaleString();
   };
 
   if (loading) {
@@ -102,11 +112,11 @@ export default function DonorsList({ searchParams, token }: DonorsListProps) {
   return (
     <div className="space-y-4">
       <h2 className="text-2xl font-bold">Nearby Donors</h2>
-      {donors.length === 0 ? (
+      {currentDonors.length === 0 ? (
         <p>No donors found matching your search criteria.</p>
       ) : (
         <ul className="space-y-4">
-          {donors.map((donor) => (
+          {currentDonors.map((donor) => (
             <li key={donor.id} className="border rounded-lg p-2 shadow-sm">
               <Link
                 href={`/donors/${donor.id}`}
@@ -159,7 +169,40 @@ export default function DonorsList({ searchParams, token }: DonorsListProps) {
       )}
 
       {/* Pagination */}
-      <PaginationDemo />
+      <Pagination>
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              href="#"
+            />
+          </PaginationItem>
+          {Array.from(
+            { length: Math.ceil(donors.length / itemsPerPage) },
+            (_, i) => (
+              <PaginationItem key={i + 1}>
+                <PaginationLink
+                  onClick={() => paginate(i + 1)}
+                  href="#"
+                  isActive={currentPage === i + 1}
+                >
+                  {i + 1}
+                </PaginationLink>
+              </PaginationItem>
+            )
+          )}
+          <PaginationItem>
+            <PaginationNext
+              onClick={() =>
+                setCurrentPage((prev) =>
+                  Math.min(prev + 1, Math.ceil(donors.length / itemsPerPage))
+                )
+              }
+              href="#"
+            />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
     </div>
   );
 }
